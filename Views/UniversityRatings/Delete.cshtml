@@ -1,0 +1,105 @@
+﻿@model MyRateApp2.Models.UniversityRating
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>UniversityRating</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Reputation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Reputation)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Opportunity)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Opportunity)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Happiness)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Happiness)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Facilities)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Facilities)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Location)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Location)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Safety)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Safety)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Clubs)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Clubs)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Social)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Social)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Internet)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Internet)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Food)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Food)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Overall)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Overall)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CreationDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CreationDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Comment)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Comment)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Uni)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Uni.UniId)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="UniRatingId" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

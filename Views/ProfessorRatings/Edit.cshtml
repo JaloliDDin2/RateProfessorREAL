@@ -1,0 +1,85 @@
+﻿@using MyRateApp2.Data.Enums
+@model MyRateApp2.Models.ProfessorRating
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>ProfessorRating</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProfRateId" />
+            <div class="form-group">
+                <label asp-for="ProfGrade" class="control-label"></label>
+                <select asp-for="ProfGrade" class="form-control" asp-items="@Html.GetEnumSelectList<ProfGrade>()"></select>
+                <span asp-validation-for="ProfGrade" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comment" class="control-label"></label>
+                <input asp-for="Comment" class="form-control" />
+                <span asp-validation-for="Comment" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Attendance" /> @Html.DisplayNameFor(model => model.Attendance)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="WouldTakeAgain" /> @Html.DisplayNameFor(model => model.WouldTakeAgain)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="LevelOfDifficulty" class="control-label"></label>
+                <select asp-for="LevelOfDifficulty" class="form-control" asp-items="@Html.GetEnumSelectList<LevelOfDifficulty>()"></select>
+                <span asp-validation-for="LevelOfDifficulty" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CourseCode" class="control-label"></label>
+                <input asp-for="CourseCode" class="form-control" />
+                <span asp-validation-for="CourseCode" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Textbook" /> @Html.DisplayNameFor(model => model.Textbook)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreationDate" class="control-label"></label>
+                <input asp-for="CreationDate" class="form-control" />
+                <span asp-validation-for="CreationDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Grade" class="control-label"></label>
+                <select asp-for="Grade" class="form-control" asp-items="@Html.GetEnumSelectList<Grades>()"></select>
+                <span asp-validation-for="Grade" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="ForCredit" /> @Html.DisplayNameFor(model => model.ForCredit)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProfId" class="control-label"></label>
+                <select asp-for="ProfId" class="form-control" asp-items="ViewBag.ProfId"></select>
+                <span asp-validation-for="ProfId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
