@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyRateApp2.Models
 {
-    public partial class User: IdentityUser
+    public partial class User
     {
         [Key]
         public long UserId { get; set; }
