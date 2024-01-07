@@ -8,7 +8,7 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+@* <table class="table">
     <thead>
         <tr>
             <th>
@@ -49,4 +49,84 @@
         </tr>
 }
     </tbody>
-</table>
+</table> *@
+<link href="~/css/new.css" rel="stylesheet">
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="main-box clearfix">
+				<div class="table-responsive">
+					<table class="table user-list">
+						<thead>
+							<tr>
+								<th><span>@Html.DisplayNameFor(model => model.Fname)</span></th>
+								<th><span>Created</span></th>
+								<th class="text-center"><span>@Html.DisplayNameFor(model => model.Department)</span></th>
+								<th><span>@Html.DisplayNameFor(model => model.Uni)</span></th>
+								<th><span>Email</span></th>
+								<th>&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var item in Model)
+							{
+								<tr>
+									<td>
+										<img src="https://bootdey.com/img/Content/avatar/avatar1.png" width="50px" height="50px" alt="">
+										<a href="#" class="user-link">
+											@Html.DisplayFor(modelItem => item.Fname)
+										</a>
+										<span class="user-subhead">Admin</span>
+									</td>
+									<td>
+										2013/08/08
+									</td>
+									<td class="text-center">
+										<span class="label label-default">
+											@Html.DisplayFor(modelItem => item.Department)
+										</span>
+									</td>
+									<td>
+										@Html.DisplayFor(modelItem => item.Uni.Name)
+									</td>
+									<td>
+										<a href="#">mila@kunis.com</a>
+									</td>
+									<td style="width: 20%;">
+										<a asp-action="Details" asp-route-id="@item.ProfId">
+											<span class="fa-stack">
+												<i class="fa fa-square fa-stack-2x"></i>
+												<i class="fa fa-search-plus fa-stack-1x fa-inverse"></i>
+											</span>
+										</a> |
+										<a asp-action="Edit" asp-route-id="@item.ProfId">
+											<span class="fa-stack">
+												<i class="fa fa-square fa-stack-2x"></i>
+												<i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+											</span>
+										</a> |
+										<a asp-action="Delete" asp-route-id="@item.ProfId">
+											<span class="fa-stack">
+												<i class="fa fa-square fa-stack-2x"></i>
+												<i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+											</span>
+										</a>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+				<ul class="pagination pull-right">
+					<li><a href="#"><i class="fa fa-chevron-left"></i></a></li>
+					<li><a href="#">1</a></li>
+					<li><a href="#">2</a></li>
+					<li><a href="#">3</a></li>
+					<li><a href="#">4</a></li>
+					<li><a href="#">5</a></li>
+					<li><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
