@@ -77,6 +77,8 @@ namespace MyRateApp2.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
+            [RegularExpression(@"^[a-zA-Z0-9._%+-]+(@final\.edu\.tr)$", ErrorMessage = "Registration limited to domain1 and domain2.")]
+
             public string Email { get; set; }
 
             /// <summary>
