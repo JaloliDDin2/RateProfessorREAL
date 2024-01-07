@@ -77,7 +77,6 @@ namespace MyRateApp2.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
-            [RegularExpression(@"^[a-zA-Z0-9._%+-]+(@final\.edu\.tr)$", ErrorMessage = "Registration limited to only FIU email addresses ")]
             public string Email { get; set; }
 
             /// <summary>
