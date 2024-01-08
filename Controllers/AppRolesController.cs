@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace MyRateApp2.Controllers
 {
+    [Authorize]
     public class AppRolesController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;

@@ -86,6 +86,10 @@ namespace MyRateApp2.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -137,6 +141,8 @@ namespace MyRateApp2.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -395,17 +401,45 @@ namespace MyRateApp2.Migrations
                     b.ToTable("UniversityRating");
                 });
 
-            modelBuilder.Entity("MyRateApp2.Models.User", b =>
+            modelBuilder.Entity("MyRateApp2.Models.UserProfessorRating", b =>
                 {
-                    b.Property<long>("UserId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<long?>("ProfRateId")
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("UserId"), 1L, 1);
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("UserId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasIndex("ProfRateId");
+
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("UserProfessorRating");
+                });
+
+            modelBuilder.Entity("MyRateApp2.Models.UserUniversityRating", b =>
+                {
+                    b.Property<int?>("UniRatingId")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UserId1")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasIndex("UniRatingId");
+
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("UserUniversityRating");
+                });
+
+            modelBuilder.Entity("MyRateApp2.Models.User", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
                     b.Property<string>("Fname")
                         .IsRequired()
@@ -431,39 +465,7 @@ namespace MyRateApp2.Migrations
                     b.Property<int>("UniRatingId")
                         .HasColumnType("int");
 
-                    b.HasKey("UserId");
-
-                    b.ToTable("User");
-                });
-
-            modelBuilder.Entity("MyRateApp2.Models.UserProfessorRating", b =>
-                {
-                    b.Property<long?>("ProfRateId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasIndex("ProfRateId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserProfessorRating");
-                });
-
-            modelBuilder.Entity("MyRateApp2.Models.UserUniversityRating", b =>
-                {
-                    b.Property<int?>("UniRatingId")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasIndex("UniRatingId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserUniversityRating");
+                    b.HasDiscriminator().HasValue("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -552,7 +554,7 @@ namespace MyRateApp2.Migrations
 
                     b.HasOne("MyRateApp2.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId1");
 
                     b.Navigation("ProfRate");
 
@@ -567,7 +569,7 @@ namespace MyRateApp2.Migrations
 
                     b.HasOne("MyRateApp2.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId1");
 
                     b.Navigation("UniRating");
 

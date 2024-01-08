@@ -29,6 +29,7 @@ namespace MyRateApp2.Controllers
         }
 
         // GET: Professors/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null || _context.Professor == null)
