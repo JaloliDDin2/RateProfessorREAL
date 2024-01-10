@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MyRateApp2.Migrations
 {
-    public partial class Identity : Migration
+    public partial class First : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,6 +28,14 @@ namespace MyRateApp2.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Fname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Lname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UniName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GraduationYear = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Password = table.Column<int>(type: "int", nullable: true),
+                    ProfRateId = table.Column<int>(type: "int", nullable: true),
+                    UniRatingId = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -64,26 +72,6 @@ namespace MyRateApp2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_University", x => x.UniId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    UserId = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Fname = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Lname = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UniName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GraduationYear = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Password = table.Column<int>(type: "int", nullable: false),
-                    ProfRateId = table.Column<int>(type: "int", nullable: false),
-                    UniRatingId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.UserId);
                 });
 
             migrationBuilder.CreateTable(
@@ -277,20 +265,21 @@ namespace MyRateApp2.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<long>(type: "bigint", nullable: true),
-                    UniRatingId = table.Column<int>(type: "int", nullable: true)
+                    UniRatingId = table.Column<int>(type: "int", nullable: true),
+                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
+                    table.ForeignKey(
+                        name: "FK_UserUniversityRating_AspNetUsers_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_UserUniversityRating_UniversityRating_UniRatingId",
                         column: x => x.UniRatingId,
                         principalTable: "UniversityRating",
                         principalColumn: "UniRatingId");
-                    table.ForeignKey(
-                        name: "FK_UserUniversityRating_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
@@ -298,20 +287,21 @@ namespace MyRateApp2.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<long>(type: "bigint", nullable: true),
-                    ProfRateId = table.Column<long>(type: "bigint", nullable: true)
+                    ProfRateId = table.Column<long>(type: "bigint", nullable: true),
+                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
+                    table.ForeignKey(
+                        name: "FK_UserProfessorRating_AspNetUsers_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_UserProfessorRating_ProfessorRating_ProfRateId",
                         column: x => x.ProfRateId,
                         principalTable: "ProfessorRating",
                         principalColumn: "ProfRateId");
-                    table.ForeignKey(
-                        name: "FK_UserProfessorRating_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -378,9 +368,9 @@ namespace MyRateApp2.Migrations
                 column: "ProfRateId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserProfessorRating_UserId",
+                name: "IX_UserProfessorRating_UserId1",
                 table: "UserProfessorRating",
-                column: "UserId");
+                column: "UserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserUniversityRating_UniRatingId",
@@ -388,9 +378,9 @@ namespace MyRateApp2.Migrations
                 column: "UniRatingId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserUniversityRating_UserId",
+                name: "IX_UserUniversityRating_UserId1",
                 table: "UserUniversityRating",
-                column: "UserId");
+                column: "UserId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -420,16 +410,13 @@ namespace MyRateApp2.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "ProfessorRating");
 
             migrationBuilder.DropTable(
-                name: "UniversityRating");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "UniversityRating");
 
             migrationBuilder.DropTable(
                 name: "Professor");
