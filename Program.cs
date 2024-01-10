@@ -66,7 +66,23 @@ namespace MyRateApp2
                 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
                 string email = "jaloliddin@admin.com";
                 string password = "Admin123!";
-                if(await userManager.FindByEmailAsync(email) == null)
+                if (await userManager.FindByEmailAsync(email) == null)
+                {
+                    var user = new IdentityUser();
+                    user.UserName = email;
+                    user.Email = email;
+
+                    await userManager.CreateAsync(user, password);
+
+                    await userManager.AddToRoleAsync(user, "Admin");
+                }
+            }
+            using (var scope = app.Services.CreateScope())
+            {
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+                string email = "Hamza@admin.com";
+                string password = "Admin123!";
+                if (await userManager.FindByEmailAsync(email) == null)
                 {
                     var user = new IdentityUser();
                     user.UserName = email;
