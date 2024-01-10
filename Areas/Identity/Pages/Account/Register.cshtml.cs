@@ -77,6 +77,7 @@ namespace MyRateApp2.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
+            [RegularExpression(@"^[a-zA-Z0-9._%+-]+(@)+[a-zA-Z]+(\.edu\.tr)$", ErrorMessage = "Register with Your Univerity Email")]
             public string Email { get; set; }
 
             /// <summary>
