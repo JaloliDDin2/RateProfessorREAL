@@ -18,8 +18,8 @@ namespace MyRateApp2.Models
         public string? City { get; set; }
         public string? Website { get; set; }
         public string? Email { get; set; }
-
         public virtual UniversityRating? UniversityRating { get; set; }
+        public virtual ICollection<User> Users { get; set; }
         public virtual ICollection<Professor> Professors { get; set; }
     }
 }
