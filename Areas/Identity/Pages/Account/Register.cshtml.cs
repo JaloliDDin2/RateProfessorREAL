@@ -19,7 +19,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MyRateApp2.Data;
 using MyRateApp2.Models;
 
 namespace MyRateApp2.Areas.Identity.Pages.Account
@@ -33,14 +35,15 @@ namespace MyRateApp2.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
-
+        private readonly ApplicationDbContext _universityDbContext;
         public RegisterModel(
             UserManager<User> userManager,
             IUserStore<User> userStore,
             SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            ApplicationDbContext universityDbContext)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -49,6 +52,17 @@ namespace MyRateApp2.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _roleManager = roleManager;
+            _universityDbContext = universityDbContext;
+        }
+
+        public JsonResult OnGetUniversityName(string domain)
+        {
+            var universityName = _universityDbContext.University
+                                                     .AsEnumerable()
+                                                     .FirstOrDefault(u => u.Email.Split('@').Last().ToLower() == domain)
+                                                     ?.Name;
+
+            return new JsonResult(new { universityName });
         }
 
         /// <summary>
@@ -90,8 +104,7 @@ namespace MyRateApp2.Areas.Identity.Pages.Account
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
-            [RegularExpression(@"^[a-zA-Z0-9._%+-]+(@final\.edu\.tr)$", ErrorMessage = "Registration limited only final.edu.tr users can register.")]
-
+            [RegularExpression(@"^[a-zA-Z0-9._%+-]+(@)+[a-zA-Z]+(\.edu\.tr)$", ErrorMessage = "Register with Your Univerity Email")]
             public string Email { get; set; }
 
             /// <summary>
@@ -113,10 +126,9 @@ namespace MyRateApp2.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-            //[Required]
-            //public string? Role { get; set; }
-            //[ValidateNever]
-            //public IEnumerable<SelectListItem> RoleList { get; set; }
+            [Required]
+            [Display(Name = "University")]
+            public string SelectedUniversity { get; set; }
         }
 
 
@@ -125,9 +137,13 @@ namespace MyRateApp2.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
+            ViewData["Universities"] = await _universityDbContext.University
+            .Select(u => new SelectListItem { Value = u.Name, Text = u.Name })
+            .ToListAsync();
+
             //Input = new InputModel()
             //{
-            //    RoleList = _roleManager.Roles.Select(x => x.Name).Select(i => new SelectListItem
+            //    UniList = 
             //    {
             //        Text = i,
             //        Value = i
@@ -141,13 +157,19 @@ namespace MyRateApp2.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = CreateUser();
 
+                var user = CreateUser();
+                var emailDomain = Input.Email.Split('@').Last().ToLower();
+                user.UniName = _universityDbContext.University
+                                                   .AsEnumerable()
+                                                   .FirstOrDefault(u => u.Email.Split('@').Last().ToLower() == emailDomain)
+                                                   ?.Name;
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
                 user.Fname = Input.Fname;
                 user.Lname = Input.Lname;
+                user.UniName = Input.SelectedUniversity;
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)

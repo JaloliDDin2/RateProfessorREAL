@@ -9,9 +9,8 @@ namespace MyRateApp2.Models
     {
         public string Fname { get; set; } = null!;
         public string Lname { get; set; } = null!;
-        public int UniId { get; set; }
-        public University? University { get; set; }
         public DateTime GraduationYear { get; set; }
+        public string? UniName { get; set; }
         public int Password { get; set; }
         public int ProfRateId { get; set; }
         public int UniRatingId { get; set; }

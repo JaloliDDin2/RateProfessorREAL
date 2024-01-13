@@ -395,13 +395,10 @@ namespace MyRateApp2.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<int>("UniId")
-                        .HasColumnType("int");
+                    b.Property<string>("UniName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UniRatingId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UniversityUniId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
@@ -417,8 +414,6 @@ namespace MyRateApp2.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("UniversityUniId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -537,15 +532,6 @@ namespace MyRateApp2.Migrations
                     b.Navigation("Uni");
                 });
 
-            modelBuilder.Entity("MyRateApp2.Models.User", b =>
-                {
-                    b.HasOne("MyRateApp2.Models.University", "University")
-                        .WithMany("Users")
-                        .HasForeignKey("UniversityUniId");
-
-                    b.Navigation("University");
-                });
-
             modelBuilder.Entity("MyRateApp2.Models.UserProfessorRating", b =>
                 {
                     b.HasOne("MyRateApp2.Models.ProfessorRating", "ProfRate")
@@ -586,8 +572,6 @@ namespace MyRateApp2.Migrations
                     b.Navigation("Professors");
 
                     b.Navigation("UniversityRating");
-
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }
