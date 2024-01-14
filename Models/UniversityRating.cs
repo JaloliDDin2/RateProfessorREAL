@@ -24,5 +24,7 @@ namespace MyRateApp2.Models
         public int? UniId { get; set; }
 
         public virtual University? Uni { get; set; }
+        public string UserId { get; set; }
+        public virtual User User { get; set; }
     }
 }

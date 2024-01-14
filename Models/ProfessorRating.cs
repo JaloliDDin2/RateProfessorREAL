@@ -23,5 +23,8 @@ namespace MyRateApp2.Models
         public bool ForCredit { get; set; }
         public long? ProfId { get; set; }
         public virtual Professor? Prof { get; set; }
+        public string UserId { get; set; }
+        public virtual User User { get; set; }
+
     }
 }

@@ -12,8 +12,8 @@ using MyRateApp2.Data;
 namespace MyRateApp2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240113164819_Hello1")]
-    partial class Hello1
+    [Migration("20240114195338_First")]
+    partial class First
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -227,6 +227,10 @@ namespace MyRateApp2.Migrations
                     b.Property<bool>("Textbook")
                         .HasColumnType("bit");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<bool>("WouldTakeAgain")
                         .HasColumnType("bit");
 
@@ -235,6 +239,8 @@ namespace MyRateApp2.Migrations
                     b.HasIndex("ProfId")
                         .IsUnique()
                         .HasFilter("[ProfId] IS NOT NULL");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ProfessorRating");
                 });
@@ -323,11 +329,17 @@ namespace MyRateApp2.Migrations
                     b.Property<int?>("UniId")
                         .HasColumnType("int");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("UniRatingId");
 
                     b.HasIndex("UniId")
                         .IsUnique()
                         .HasFilter("[UniId] IS NOT NULL");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("UniversityRating");
                 });
@@ -388,9 +400,6 @@ namespace MyRateApp2.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int>("ProfRateId")
-                        .HasColumnType("int");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -400,7 +409,7 @@ namespace MyRateApp2.Migrations
                     b.Property<string>("UniName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UniRatingId")
+                    b.Property<int?>("UniversityId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
@@ -417,43 +426,9 @@ namespace MyRateApp2.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("UniversityId");
+
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("MyRateApp2.Models.UserProfessorRating", b =>
-                {
-                    b.Property<long?>("ProfRateId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasIndex("ProfRateId");
-
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("UserProfessorRating");
-                });
-
-            modelBuilder.Entity("MyRateApp2.Models.UserUniversityRating", b =>
-                {
-                    b.Property<int?>("UniRatingId")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("UserId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasIndex("UniRatingId");
-
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("UserUniversityRating");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -522,7 +497,15 @@ namespace MyRateApp2.Migrations
                         .WithOne("ProfessorRating")
                         .HasForeignKey("MyRateApp2.Models.ProfessorRating", "ProfId");
 
+                    b.HasOne("MyRateApp2.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Prof");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MyRateApp2.Models.UniversityRating", b =>
@@ -531,37 +514,24 @@ namespace MyRateApp2.Migrations
                         .WithOne("UniversityRating")
                         .HasForeignKey("MyRateApp2.Models.UniversityRating", "UniId");
 
+                    b.HasOne("MyRateApp2.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Uni");
-                });
-
-            modelBuilder.Entity("MyRateApp2.Models.UserProfessorRating", b =>
-                {
-                    b.HasOne("MyRateApp2.Models.ProfessorRating", "ProfRate")
-                        .WithMany()
-                        .HasForeignKey("ProfRateId");
-
-                    b.HasOne("MyRateApp2.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1");
-
-                    b.Navigation("ProfRate");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MyRateApp2.Models.UserUniversityRating", b =>
+            modelBuilder.Entity("MyRateApp2.Models.User", b =>
                 {
-                    b.HasOne("MyRateApp2.Models.UniversityRating", "UniRating")
+                    b.HasOne("MyRateApp2.Models.University", "University")
                         .WithMany()
-                        .HasForeignKey("UniRatingId");
+                        .HasForeignKey("UniversityId");
 
-                    b.HasOne("MyRateApp2.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1");
-
-                    b.Navigation("UniRating");
-
-                    b.Navigation("User");
+                    b.Navigation("University");
                 });
 
             modelBuilder.Entity("MyRateApp2.Models.Professor", b =>

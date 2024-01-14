@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,17 +16,19 @@ namespace MyRateApp2.Controllers
     public class ProfessorRatingsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public ProfessorRatingsController(ApplicationDbContext context)
+        public ProfessorRatingsController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: ProfessorRatings
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.ProfessorRating.Include(p => p.Prof);
-            return View(await applicationDbContext.ToListAsync());
+            var ratings = await _context.ProfessorRating.ToListAsync();
+            return View(ratings);
         }
 
         // GET: ProfessorRatings/Details/5
@@ -48,26 +51,46 @@ namespace MyRateApp2.Controllers
         }
 
         // GET: ProfessorRatings/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(long professorId)
         {
-            ViewData["ProfId"] = new SelectList(_context.Professor, "ProfId", "ProfId");
+            var user = await _userManager.GetUserAsync(User);
+            var professor = await _context.Professor.FirstOrDefaultAsync(p => p.ProfId == professorId);
+
+            if (professor == null || user.UniversityId != professor.UniId)
+            {
+                return Unauthorized(); // Or any other appropriate response
+            }
+
+            // If authorized, show the create view
             return View();
         }
 
         // POST: ProfessorRatings/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: ProfessorRatings/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProfRateId,ProfGrade,Comment,Attendance,WouldTakeAgain,LevelOfDifficulty,CourseCode,Textbook,CreationDate,Grade,ForCredit,ProfId")] ProfessorRating professorRating)
+        public async Task<IActionResult> Create([Bind("ProfRateId, ProfGrade, Comment, Attendance, WouldTakeAgain, LevelOfDifficulty, CourseCode, Textbook, CreationDate, Grade, ForCredit, ProfId")] ProfessorRating professorRating)
         {
+            var user = await _userManager.GetUserAsync(User);
+            var professor = await _context.Professor.FirstOrDefaultAsync(p => p.ProfId == professorRating.ProfId);
+
+            if (professor == null || user.UniversityId != professor.UniId)
+            {
+                return Unauthorized(); // Or any other appropriate response
+            }
+
             if (ModelState.IsValid)
             {
+                // Add the current user's ID to the rating
+                professorRating.UserId = user.Id;
+
                 _context.Add(professorRating);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProfId"] = new SelectList(_context.Professor, "ProfId", "ProfId", professorRating.ProfId);
+
             return View(professorRating);
         }
 

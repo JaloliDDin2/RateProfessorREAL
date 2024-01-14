@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MyRateApp2.Migrations
 {
-    public partial class Hello1 : Migration
+    public partial class First : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,38 +21,6 @@ namespace MyRateApp2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Fname = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Lname = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GraduationYear = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UniName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<int>(type: "int", nullable: false),
-                    ProfRateId = table.Column<int>(type: "int", nullable: false),
-                    UniRatingId = table.Column<int>(type: "int", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -92,6 +60,63 @@ namespace MyRateApp2.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Fname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Lname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GraduationYear = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UniName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<int>(type: "int", nullable: false),
+                    UniversityId = table.Column<int>(type: "int", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_University_UniversityId",
+                        column: x => x.UniversityId,
+                        principalTable: "University",
+                        principalColumn: "UniId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Professor",
+                columns: table => new
+                {
+                    ProfId = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Fname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Lname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Department = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UniId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Professor", x => x.ProfId);
+                    table.ForeignKey(
+                        name: "FK_Professor_University_UniId",
+                        column: x => x.UniId,
+                        principalTable: "University",
+                        principalColumn: "UniId");
                 });
 
             migrationBuilder.CreateTable(
@@ -180,27 +205,6 @@ namespace MyRateApp2.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Professor",
-                columns: table => new
-                {
-                    ProfId = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Fname = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Lname = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Department = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UniId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Professor", x => x.ProfId);
-                    table.ForeignKey(
-                        name: "FK_Professor_University_UniId",
-                        column: x => x.UniId,
-                        principalTable: "University",
-                        principalColumn: "UniId");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UniversityRating",
                 columns: table => new
                 {
@@ -219,11 +223,18 @@ namespace MyRateApp2.Migrations
                     Overall = table.Column<int>(type: "int", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UniId = table.Column<int>(type: "int", nullable: true)
+                    UniId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UniversityRating", x => x.UniRatingId);
+                    table.ForeignKey(
+                        name: "FK_UniversityRating_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_UniversityRating_University_UniId",
                         column: x => x.UniId,
@@ -247,60 +258,23 @@ namespace MyRateApp2.Migrations
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Grade = table.Column<int>(type: "int", nullable: false),
                     ForCredit = table.Column<bool>(type: "bit", nullable: false),
-                    ProfId = table.Column<long>(type: "bigint", nullable: true)
+                    ProfId = table.Column<long>(type: "bigint", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProfessorRating", x => x.ProfRateId);
                     table.ForeignKey(
+                        name: "FK_ProfessorRating_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_ProfessorRating_Professor_ProfId",
                         column: x => x.ProfId,
                         principalTable: "Professor",
                         principalColumn: "ProfId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserUniversityRating",
-                columns: table => new
-                {
-                    UserId = table.Column<long>(type: "bigint", nullable: true),
-                    UniRatingId = table.Column<int>(type: "int", nullable: true),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.ForeignKey(
-                        name: "FK_UserUniversityRating_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UserUniversityRating_UniversityRating_UniRatingId",
-                        column: x => x.UniRatingId,
-                        principalTable: "UniversityRating",
-                        principalColumn: "UniRatingId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserProfessorRating",
-                columns: table => new
-                {
-                    UserId = table.Column<long>(type: "bigint", nullable: true),
-                    ProfRateId = table.Column<long>(type: "bigint", nullable: true),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.ForeignKey(
-                        name: "FK_UserProfessorRating_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_UserProfessorRating_ProfessorRating_ProfRateId",
-                        column: x => x.ProfRateId,
-                        principalTable: "ProfessorRating",
-                        principalColumn: "ProfRateId");
                 });
 
             migrationBuilder.CreateIndex(
@@ -336,6 +310,11 @@ namespace MyRateApp2.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_UniversityId",
+                table: "AspNetUsers",
+                column: "UniversityId");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -355,6 +334,11 @@ namespace MyRateApp2.Migrations
                 filter: "[ProfId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProfessorRating_UserId",
+                table: "ProfessorRating",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UniversityRating_UniId",
                 table: "UniversityRating",
                 column: "UniId",
@@ -362,24 +346,9 @@ namespace MyRateApp2.Migrations
                 filter: "[UniId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserProfessorRating_ProfRateId",
-                table: "UserProfessorRating",
-                column: "ProfRateId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserProfessorRating_UserId1",
-                table: "UserProfessorRating",
-                column: "UserId1");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserUniversityRating_UniRatingId",
-                table: "UserUniversityRating",
-                column: "UniRatingId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserUniversityRating_UserId1",
-                table: "UserUniversityRating",
-                column: "UserId1");
+                name: "IX_UniversityRating_UserId",
+                table: "UniversityRating",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -400,25 +369,19 @@ namespace MyRateApp2.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "UserProfessorRating");
-
-            migrationBuilder.DropTable(
-                name: "UserUniversityRating");
-
-            migrationBuilder.DropTable(
-                name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
                 name: "ProfessorRating");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "UniversityRating");
 
             migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
                 name: "Professor");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "University");

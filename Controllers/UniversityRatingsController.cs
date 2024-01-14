@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,17 +16,20 @@ namespace MyRateApp2.Controllers
     public class UniversityRatingsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public UniversityRatingsController(ApplicationDbContext context)
+
+        public UniversityRatingsController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: UniversityRatings
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.UniversityRating.Include(u => u.Uni);
-            return View(await applicationDbContext.ToListAsync());
+            var ratings = await _context.UniversityRating.ToListAsync();
+            return View(ratings);
         }
 
         // GET: UniversityRatings/Details/5
@@ -50,7 +54,15 @@ namespace MyRateApp2.Controllers
         // GET: UniversityRatings/Create
         public IActionResult Create()
         {
-            ViewData["UniId"] = new SelectList(_context.University, "UniId", "UniId");
+            // Only allow users to rate their own university
+            var user = _userManager.GetUserAsync(User).Result;
+
+            if (user == null || user.UniversityId == null)
+            {
+                return Unauthorized(); // Or redirect to an error page
+            }
+
+            // If authorized, show the create view
             return View();
         }
 
@@ -59,15 +71,22 @@ namespace MyRateApp2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UniRatingId,Reputation,Opportunity,Happiness,Facilities,Location,Safety,Clubs,Social,Internet,Food,Overall,CreationDate,Comment,UniId")] UniversityRating universityRating)
+        public async Task<IActionResult> Create([Bind("UniRatingId, Reputation, Opportunity, Happiness, Facilities, Location, Safety, Clubs, Social, Internet, Food, Overall, CreationDate, Comment, UniId")] UniversityRating universityRating)
         {
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user == null || user.UniversityId == null || user.UniversityId != universityRating.UniId)
+            {
+                return Unauthorized(); // Or redirect to an error page
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(universityRating);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UniId"] = new SelectList(_context.University, "UniId", "UniId", universityRating.UniId);
+
             return View(universityRating);
         }
 
