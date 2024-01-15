@@ -58,7 +58,7 @@ namespace MyRateApp2.Controllers
 
             if (professor == null || user.UniversityId != professor.UniId)
             {
-                return Unauthorized(); // Or any other appropriate response
+                return Unauthorized("You can only rate you University"); // Or any other appropriate response
             }
 
             // If authorized, show the create view
@@ -78,7 +78,7 @@ namespace MyRateApp2.Controllers
 
             if (professor == null || user.UniversityId != professor.UniId)
             {
-                return Unauthorized(); // Or any other appropriate response
+                return Unauthorized("You can only rate you University"); // Or any other appropriate response
             }
 
             if (ModelState.IsValid)

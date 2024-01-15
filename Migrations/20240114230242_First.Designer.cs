@@ -12,7 +12,7 @@ using MyRateApp2.Data;
 namespace MyRateApp2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240114195338_First")]
+    [Migration("20240114230242_First")]
     partial class First
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
