@@ -24,9 +24,28 @@ namespace MyRateApp2.Controllers
         // GET: Universities
         public async Task<IActionResult> Index()
         {
+
+
               return _context.University != null ? 
                           View(await _context.University.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.University'  is null.");
+        }
+
+
+        //GET: Professor/ShowSearchForm
+        public async Task<IActionResult> ShowSearchForm()
+        {
+            return _context.University != null ?
+                        View() :
+                        Problem("Entity set 'ApplicationDbContext.Professor'  is null.");
+        }
+
+        //GET: Professor/ShowSearchResults
+        public async Task<IActionResult> ShowSearchResults(String SearchPhrase)
+        {
+            return _context.University != null ?
+                        View("Index", await _context.University.Where(p => p.Name.Contains(SearchPhrase)).ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbContext.Professor'  is null.");
         }
 
         // GET: Universities/Details/5
@@ -137,6 +156,11 @@ namespace MyRateApp2.Controllers
 
             return View(university);
         }
+
+
+        
+
+
 
         // POST: Universities/Delete/5
         [HttpPost, ActionName("Delete")]
