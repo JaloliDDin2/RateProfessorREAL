@@ -54,17 +54,17 @@ namespace MyRateApp2.Areas.Identity.Pages.Account
             _roleManager = roleManager;
             _universityDbContext = universityDbContext;
         }
-
         public JsonResult OnGetUniversityName(string domain)
         {
-            var universityName = _universityDbContext.University
-                                                     .AsEnumerable()
-                                                     .FirstOrDefault(u => u.Email.Split('@').Last().ToLower() == domain)
-                                                     ?.Name;
+            var universities = _universityDbContext.University.ToList();
+            var university = universities.FirstOrDefault(u => u.Email.Split('@').Last().ToLower() == domain);
 
-            return new JsonResult(new { universityName });
+            return new JsonResult(new
+            {
+                universityName = university?.Name,
+                universityId = university?.UniId // Assuming 'UniId' is the name of your ID property
+            });
         }
-
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -140,37 +140,37 @@ namespace MyRateApp2.Areas.Identity.Pages.Account
             ViewData["Universities"] = await _universityDbContext.University
             .Select(u => new SelectListItem { Value = u.Name, Text = u.Name })
             .ToListAsync();
-
-            //Input = new InputModel()
-            //{
-            //    UniList = 
-            //    {
-            //        Text = i,
-            //        Value = i
-            //    })
-            //};
         }
-
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-
                 var user = CreateUser();
                 var emailDomain = Input.Email.Split('@').Last().ToLower();
-                user.UniName = _universityDbContext.University
-                                                   .AsEnumerable()
-                                                   .FirstOrDefault(u => u.Email.Split('@').Last().ToLower() == emailDomain)
-                                                   ?.Name;
+
+                // Fetch the list of universities synchronously
+                var universities = _universityDbContext.University.ToList();
+                var university = universities.FirstOrDefault(u => u.Email.Split('@').Last().ToLower() == emailDomain);
+
+                if (university == null)
+                {
+                    ModelState.AddModelError(string.Empty, "No university found with your email domain.");
+                    return Page();
+                }
+
+                // Set the UniversityId for the user
+                user.UniversityId = university.UniId;
+
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
                 user.Fname = Input.Fname;
                 user.Lname = Input.Lname;
-                user.UniName = Input.SelectedUniversity;
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
 
                 if (result.Succeeded)
                 {

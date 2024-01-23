@@ -12,8 +12,8 @@ using MyRateApp2.Data;
 namespace MyRateApp2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240113164819_Hello1")]
-    partial class Hello1
+    [Migration("20240123000133_Selam")]
+    partial class Selam
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -403,6 +403,9 @@ namespace MyRateApp2.Migrations
                     b.Property<int>("UniRatingId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("UniversityId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -416,6 +419,8 @@ namespace MyRateApp2.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("UniversityId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -532,6 +537,15 @@ namespace MyRateApp2.Migrations
                         .HasForeignKey("MyRateApp2.Models.UniversityRating", "UniId");
 
                     b.Navigation("Uni");
+                });
+
+            modelBuilder.Entity("MyRateApp2.Models.User", b =>
+                {
+                    b.HasOne("MyRateApp2.Models.University", "University")
+                        .WithMany()
+                        .HasForeignKey("UniversityId");
+
+                    b.Navigation("University");
                 });
 
             modelBuilder.Entity("MyRateApp2.Models.UserProfessorRating", b =>
