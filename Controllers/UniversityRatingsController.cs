@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,7 @@ namespace MyRateApp2.Controllers
     public class UniversityRatingsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
+        private readonly UserManager<User> _userManager;
         public UniversityRatingsController(ApplicationDbContext context)
         {
             _context = context;
@@ -50,6 +51,7 @@ namespace MyRateApp2.Controllers
         // GET: UniversityRatings/Create
         public IActionResult Create()
         {
+
             ViewData["UniId"] = new SelectList(_context.University, "UniId", "UniId");
             return View();
         }
@@ -59,16 +61,46 @@ namespace MyRateApp2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UniRatingId,Reputation,Opportunity,Happiness,Facilities,Location,Safety,Clubs,Social,Internet,Food,Overall,CreationDate,Comment,UniId")] UniversityRating universityRating)
+        public async Task<IActionResult> Create([Bind("UniRatingId,Reputation,Opportunity,Happiness,Facilities,Location,Safety,Clubs,Social,Internet,Food,Overall,CreationDate,Comment,UniId,UserId")] UniversityRating universityRating)
         {
             if (ModelState.IsValid)
             {
+                universityRating.CalculateOverallRating(); // Calculate the overall rating
+
                 _context.Add(universityRating);
                 await _context.SaveChangesAsync();
+
+                UpdateOverallQuality(universityRating.UniId);
+
+
+                //    double averageRating = _context.UniversityRating
+                //.Where(r => r.UserId == userId && r.UniId == universityRating.UniId)
+                //.Average(r => r.Overall);
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["UniId"] = new SelectList(_context.University, "UniId", "UniId", universityRating.UniId);
+
             return View(universityRating);
+        }
+
+        public void UpdateOverallQuality(int? universityId)
+        {
+            var university = _context.University
+                .Include(u => u.UniversityRatings) // Include ratings for eager loading
+                .FirstOrDefault(u => u.UniId == universityId);
+
+            if (university != null)
+            {
+                // Calculate average overall quality
+                double averageOverallQuality = university.UniversityRatings.Average(r => r.Overall);
+
+                // Update overall quality property
+                university.OverallQuality = averageOverallQuality;
+
+                // Save changes to the database
+                _context.SaveChanges();
+            }
         }
 
         // GET: UniversityRatings/Edit/5
@@ -104,8 +136,11 @@ namespace MyRateApp2.Controllers
             {
                 try
                 {
+                    universityRating.CalculateOverallRating();
                     _context.Update(universityRating);
                     await _context.SaveChangesAsync();
+
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -115,6 +150,7 @@ namespace MyRateApp2.Controllers
                     }
                     else
                     {
+  
                         throw;
                     }
                 }

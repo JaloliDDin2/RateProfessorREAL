@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MyRateApp2.Migrations
 {
-    public partial class Selam : Migration
+    public partial class new1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -34,7 +34,8 @@ namespace MyRateApp2.Migrations
                     State = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Website = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OverallQuality = table.Column<double>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -73,7 +74,6 @@ namespace MyRateApp2.Migrations
                     UniName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<int>(type: "int", nullable: false),
                     ProfRateId = table.Column<int>(type: "int", nullable: false),
-                    UniRatingId = table.Column<int>(type: "int", nullable: false),
                     UniversityId = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -104,12 +104,13 @@ namespace MyRateApp2.Migrations
                 name: "Professor",
                 columns: table => new
                 {
-                    ProfId = table.Column<long>(type: "bigint", nullable: false)
+                    ProfId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Fname = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Lname = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Department = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UniId = table.Column<int>(type: "int", nullable: true)
+                    UniId = table.Column<int>(type: "int", nullable: true),
+                    Overall = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -137,7 +138,7 @@ namespace MyRateApp2.Migrations
                     Social = table.Column<int>(type: "int", nullable: false),
                     Internet = table.Column<int>(type: "int", nullable: false),
                     Food = table.Column<int>(type: "int", nullable: false),
-                    Overall = table.Column<int>(type: "int", nullable: false),
+                    Overall = table.Column<double>(type: "float", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UniId = table.Column<int>(type: "int", nullable: true)
@@ -241,19 +242,20 @@ namespace MyRateApp2.Migrations
                 name: "ProfessorRating",
                 columns: table => new
                 {
-                    ProfRateId = table.Column<long>(type: "bigint", nullable: false)
+                    ProfRateId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProfGrade = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Attendance = table.Column<bool>(type: "bit", nullable: false),
                     WouldTakeAgain = table.Column<bool>(type: "bit", nullable: false),
                     LevelOfDifficulty = table.Column<int>(type: "int", nullable: false),
+                    AverageQuality = table.Column<double>(type: "float", nullable: false),
                     CourseCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Textbook = table.Column<bool>(type: "bit", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Grade = table.Column<int>(type: "int", nullable: false),
                     ForCredit = table.Column<bool>(type: "bit", nullable: false),
-                    ProfId = table.Column<long>(type: "bigint", nullable: true)
+                    ProfId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -269,7 +271,7 @@ namespace MyRateApp2.Migrations
                 name: "UserUniversityRating",
                 columns: table => new
                 {
-                    UserId = table.Column<long>(type: "bigint", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true),
                     UniRatingId = table.Column<int>(type: "int", nullable: true),
                     UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
@@ -291,8 +293,8 @@ namespace MyRateApp2.Migrations
                 name: "UserProfessorRating",
                 columns: table => new
                 {
-                    UserId = table.Column<long>(type: "bigint", nullable: true),
-                    ProfRateId = table.Column<long>(type: "bigint", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true),
+                    ProfRateId = table.Column<int>(type: "int", nullable: true),
                     UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
@@ -361,16 +363,12 @@ namespace MyRateApp2.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ProfessorRating_ProfId",
                 table: "ProfessorRating",
-                column: "ProfId",
-                unique: true,
-                filter: "[ProfId] IS NOT NULL");
+                column: "ProfId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UniversityRating_UniId",
                 table: "UniversityRating",
-                column: "UniId",
-                unique: true,
-                filter: "[UniId] IS NOT NULL");
+                column: "UniId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserProfessorRating_ProfRateId",

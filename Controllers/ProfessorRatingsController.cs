@@ -63,12 +63,36 @@ namespace MyRateApp2.Controllers
         {
             if (ModelState.IsValid)
             {
+                professorRating.CalculateQuality();
+
                 _context.Add(professorRating);
                 await _context.SaveChangesAsync();
+
+                UpdateOverallQuality(professorRating.ProfId);
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ProfId"] = new SelectList(_context.Professor, "ProfId", "ProfId", professorRating.ProfId);
             return View(professorRating);
+        }
+
+        public void UpdateOverallQuality(int? professorId)
+        {
+            var professor = _context.Professor
+                .Include(u => u.ProfessorRatings) // Include ratings for eager loading
+                .FirstOrDefault(u => u.ProfId == professorId);
+
+            if (professor != null)
+            {
+                // Calculate average overall quality
+                double averageOverallQuality = professor.ProfessorRatings.Average(r => r.AverageQuality);
+
+                // Update overall quality property
+                professor.Overall = averageOverallQuality;
+
+                // Save changes to the database
+                _context.SaveChanges();
+            }
         }
 
         // GET: ProfessorRatings/Edit/5

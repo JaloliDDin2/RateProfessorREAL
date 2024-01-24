@@ -18,4 +18,5 @@ namespace MyRateApp2.Data
         public DbSet<MyRateApp2.Models.UserProfessorRating>? UserProfessorRating { get; set; }
         public DbSet<MyRateApp2.Models.UserUniversityRating>? UserUniversityRating { get; set; }
     }
+
 }

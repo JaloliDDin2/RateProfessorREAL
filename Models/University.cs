@@ -18,7 +18,8 @@ namespace MyRateApp2.Models
         public string? City { get; set; }
         public string? Website { get; set; }
         public string? Email { get; set; }
-        public virtual UniversityRating? UniversityRating { get; set; }
+        public double? OverallQuality { get; set; }
+        public ICollection<UniversityRating> UniversityRatings { get; set; } = new HashSet<UniversityRating>();
         public virtual ICollection<Professor> Professors { get; set; }
     }
 }

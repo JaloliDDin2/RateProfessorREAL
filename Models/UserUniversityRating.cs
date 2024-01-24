@@ -7,7 +7,7 @@ namespace MyRateApp2.Models
     [Keyless]
     public partial class UserUniversityRating
     {
-        public long? UserId { get; set; }
+        public int? UserId { get; set; }
         public int? UniRatingId { get; set; }
 
         public virtual UniversityRating? UniRating { get; set; }

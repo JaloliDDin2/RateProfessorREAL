@@ -13,7 +13,7 @@ namespace MyRateApp2.Models
         public string? UniName { get; set; }
         public int Password { get; set; }
         public int ProfRateId { get; set; }
-        public int UniRatingId { get; set; }
+        //public int UniRatingId { get; set; }
         public int? UniversityId { get; set; }
         public virtual University University { get; set; }
     }
