@@ -51,6 +51,12 @@
                     <span>@Html.DisplayFor(modelItem => item.Fname), @Html.DisplayFor(modelItem => item.Lname)</span>
                 </div>
                 <div class="rating-detail">@Html.DisplayFor(modelItem => item.Department), @Html.DisplayFor(modelItem => item.Uni.Name)</div>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.ProfId" class="btn btn-primary">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.ProfId" class="btn btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.ProfId" class="btn btn-danger">Delete</a>
+                }
             </div>
         </a>
     }

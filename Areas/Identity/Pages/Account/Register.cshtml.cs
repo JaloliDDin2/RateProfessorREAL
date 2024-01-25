@@ -168,6 +168,7 @@ namespace MyRateApp2.Areas.Identity.Pages.Account
 
                 user.Fname = Input.Fname;
                 user.Lname = Input.Lname;
+                user.UserName = Input.Fname;
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
