@@ -1,0 +1,114 @@
+﻿@model IEnumerable<MyRateApp2.Models.UniversityRating>
+
+@{
+    ViewData["Title"] = "ShowRating";
+}
+
+<h1>Ratings</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Reputation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Opportunity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Happiness)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Facilities)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Safety)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Clubs)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Social)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Internet)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Food)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Overall)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Uni)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Reputation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Opportunity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Happiness)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Facilities)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Safety)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Clubs)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Social)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Internet)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Food)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Overall)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreationDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Uni.UniId)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.UniRatingId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.UniRatingId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.UniRatingId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

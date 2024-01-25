@@ -4,51 +4,56 @@
     ViewData["Title"] = "Index";
 }
 <h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <span>Name</span>
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Lname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Department)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Uni)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Lname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Department)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Uni.Name)
-            </td>
-                @if (User.IsInRole("Admin"))
-                {
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.ProfId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProfId">Details</a>|
-                <a asp-action="Delete" asp-route-id="@item.ProfId">Delete</a>
-            </td>}
-        </tr>
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
 }
-    </tbody>
-</table>
+<style>
+    .rating-card {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 20px;
+        margin: 10px 0;
+    }
+
+    .rating-header {
+        font-size: 1.5em;
+        margin-bottom: 5px;
+    }
+
+    .rating-value {
+        display: inline-block;
+        padding: 10px;
+        color: white;
+        font-weight: bold;
+        border-radius: 4px;
+    }
+
+    .rating-quality {
+        background-color: #4caf50; /* Placeholder for dynamic color based on rating */
+    }
+
+    .rating-detail {
+        font-size: 0.9em;
+        color: #666;
+    }
+</style>
+<div class="container">
+    @foreach (var item in Model)
+    {
+
+        <a asp-action="ShowRating" asp-controller="ProfessorRatings" asp-route-id="@item.ProfId">
+            <div class="rating-card">
+                <div class="rating-header">
+                    <span class="rating-value rating-quality">@Html.DisplayFor(modelItem => item.Overall)</span>
+                    <span>@Html.DisplayFor(modelItem => item.Fname), @Html.DisplayFor(modelItem => item.Lname)</span>
+                </div>
+                <div class="rating-detail">@Html.DisplayFor(modelItem => item.Department), @Html.DisplayFor(modelItem => item.Uni.Name)</div>
+            </div>
+        </a>
+    }
+</div>
+<!-- Bootstrap and site CSS references -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">

@@ -16,3 +16,31 @@ html {
 body {
   margin-bottom: 60px;
 }
+.rating-card {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    margin: 10px 0;
+}
+
+.rating-header {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+}
+
+.rating-value {
+    display: inline-block;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+.rating-quality {
+    background-color: #4caf50; /* Placeholder for dynamic color based on rating */
+}
+
+.rating-detail {
+    font-size: 0.9em;
+    color: #666;
+}

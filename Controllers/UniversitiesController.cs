@@ -24,9 +24,18 @@ namespace MyRateApp2.Controllers
         // GET: Universities
         public async Task<IActionResult> Index()
         {
-              return _context.University != null ? 
-                          View(await _context.University.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.University'  is null.");
+            if (_context.University == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.University' is null.");
+            }
+            else
+            {
+                // Filter to only include approved universities
+                var approvedUniversities = await _context.University
+                                                         .Where(u => u.IsApproved)
+                                                         .ToListAsync();
+                return View(approvedUniversities);
+            }
         }
 
         // GET: Universities/Details/5
@@ -47,6 +56,36 @@ namespace MyRateApp2.Controllers
             return View(university);
         }
 
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> PendingApproval()
+        {
+            var unapprovedUniversities = await _context.University
+                                                        .Where(u => !u.IsApproved)
+                                                        .ToListAsync();
+            return View(unapprovedUniversities);
+        }
+
+
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Approve(int id)
+        {
+            var university = await _context.University.FirstOrDefaultAsync(u => u.UniId == id);
+            if (university != null)
+            {
+                university.IsApproved = true;
+                await _context.SaveChangesAsync();
+                // Optionally redirect to the list of universities pending approval
+                return RedirectToAction(nameof(PendingApproval));
+            }
+            return NotFound();
+        }
+
+
+
         // GET: Universities/Create
         public IActionResult Create()
         {
@@ -62,12 +101,14 @@ namespace MyRateApp2.Controllers
         {
             if (ModelState.IsValid)
             {
+                university.IsApproved = false;
                 _context.Add(university);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(university);
         }
+
 
         // GET: Universities/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -90,7 +131,7 @@ namespace MyRateApp2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UniId,Name,Country,State,City,Website,Email")] University university)
+        public async Task<IActionResult> Edit(int id, [Bind("UniId,Name,Country,State,City,Website,Email,OverallQuality")] University university)
         {
             if (id != university.UniId)
             {

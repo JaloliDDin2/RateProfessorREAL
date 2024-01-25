@@ -48,11 +48,36 @@ namespace MyRateApp2.Controllers
             return View(universityRating);
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> ShowRating(int id)
+        {
+            // Fetch the university to ensure it exists
+            var university = await _context.University.FirstOrDefaultAsync(u => u.UniId == id);
+            if (university == null)
+            {
+                return NotFound();
+            }
+
+            // Now, fetch ratings for the specified university
+            var ratings = await _context.UniversityRating
+                                        .Where(r => r.UniId == id) // Ensure you have a correct reference to your foreign key or a navigation property
+                                        .ToListAsync();
+
+            // Optionally, you can pass both university details and ratings to the view if needed
+            // For this, you might need a ViewModel or a Tuple
+
+            // Pass the ratings to the view
+            return View(ratings);
+        }
+
+
+
+
         // GET: UniversityRatings/Create
         public IActionResult Create()
         {
-
-            ViewData["UniId"] = new SelectList(_context.University, "UniId", "UniId");
+            ViewData["UniId"] = new SelectList(_context.University, "UniId", "Name");
             return View();
         }
 

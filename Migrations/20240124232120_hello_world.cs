@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MyRateApp2.Migrations
 {
-    public partial class new1 : Migration
+    public partial class hello_world : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

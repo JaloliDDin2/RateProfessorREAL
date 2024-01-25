@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MyRateApp2.Models.University>
+﻿@* @model IEnumerable<MyRateApp2.Models.University>
 
 @{
     ViewData["Title"] = "Index";
@@ -63,3 +63,38 @@
 }
     </tbody>
 </table>
+ *@
+
+@model IEnumerable<MyRateApp2.Models.University>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<div class="container">
+    @foreach (var item in Model)
+    {
+           <a asp-action="ShowRating" asp-controller="UniversityRatings" asp-route-id="@item.UniId">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h5>
+                <p class="card-text"><span class="badge badge-warning">Quality @Html.DisplayFor(modelItem => item.OverallQuality)</span></p>
+                    <p class="card-text"><small class="text-muted">@Html.DisplayFor(modelItem => item.Country), @Html.DisplayFor(modelItem => item.City)</small></p>
+                    <a asp-action="Edit" asp-route-id="@item.UniId" class="btn btn-primary">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.UniId" class="btn btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.UniId" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </a>
+    }
+</div>
+
+<!-- Bootstrap and site CSS references -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="~/wwwroot/university/unicard.css">

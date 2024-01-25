@@ -29,7 +29,7 @@ namespace MyRateApp2.Controllers
         }
 
         // GET: ProfessorRatings/Details/5
-        public async Task<IActionResult> Details(long? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.ProfessorRating == null)
             {
@@ -53,6 +53,31 @@ namespace MyRateApp2.Controllers
             ViewData["ProfId"] = new SelectList(_context.Professor, "ProfId", "ProfId");
             return View();
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ShowRating(int id)
+        {
+            // Fetch the Professor to ensure it exists
+            var professor = await _context.Professor.FirstOrDefaultAsync(u => u.ProfId == id);
+            if (professor == null)
+            {
+                return NotFound();
+            }
+
+            // Now, fetch ratings for the specified Professor
+            var ratings = await _context.ProfessorRating
+                                        .Where(r => r.ProfId == id) // Ensure you have a correct reference to your foreign key or a navigation property
+                                        .ToListAsync();
+
+            // Optionally, you can pass both Professor details and ratings to the view if needed
+            // For this, you might need a ViewModel or a Tuple
+
+            // Pass the ratings to the view
+            return View(ratings);
+        }
+
+
 
         // POST: ProfessorRatings/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -96,7 +121,7 @@ namespace MyRateApp2.Controllers
         }
 
         // GET: ProfessorRatings/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.ProfessorRating == null)
             {
@@ -117,7 +142,7 @@ namespace MyRateApp2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("ProfRateId,ProfGrade,Comment,Attendance,WouldTakeAgain,LevelOfDifficulty,CourseCode,Textbook,CreationDate,Grade,ForCredit,ProfId")] ProfessorRating professorRating)
+        public async Task<IActionResult> Edit(int id, [Bind("ProfRateId,ProfGrade,Comment,Attendance,WouldTakeAgain,LevelOfDifficulty,CourseCode,Textbook,CreationDate,Grade,ForCredit,ProfId")] ProfessorRating professorRating)
         {
             if (id != professorRating.ProfRateId)
             {
@@ -149,7 +174,7 @@ namespace MyRateApp2.Controllers
         }
 
         // GET: ProfessorRatings/Delete/5
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.ProfessorRating == null)
             {
@@ -170,7 +195,7 @@ namespace MyRateApp2.Controllers
         // POST: ProfessorRatings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.ProfessorRating == null)
             {
@@ -186,7 +211,7 @@ namespace MyRateApp2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProfessorRatingExists(long id)
+        private bool ProfessorRatingExists(int id)
         {
           return (_context.ProfessorRating?.Any(e => e.ProfRateId == id)).GetValueOrDefault();
         }

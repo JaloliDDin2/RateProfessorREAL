@@ -30,7 +30,7 @@ namespace MyRateApp2.Controllers
 
         // GET: Professors/Details/5
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Details(long? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Professor == null)
             {
@@ -73,7 +73,7 @@ namespace MyRateApp2.Controllers
         }
 
         // GET: Professors/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Professor == null)
             {
@@ -94,7 +94,7 @@ namespace MyRateApp2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("ProfId,Fname,Lname,Department,UniId")] Professor professor)
+        public async Task<IActionResult> Edit(int id, [Bind("ProfId,Fname,Lname,Department,UniId")] Professor professor)
         {
             if (id != professor.ProfId)
             {
@@ -126,7 +126,7 @@ namespace MyRateApp2.Controllers
         }
 
         // GET: Professors/Delete/5
-        public async Task<IActionResult> Delete(long? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Professor == null)
             {
@@ -147,7 +147,7 @@ namespace MyRateApp2.Controllers
         // POST: Professors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Professor == null)
             {
@@ -163,7 +163,7 @@ namespace MyRateApp2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProfessorExists(long id)
+        private bool ProfessorExists(int id)
         {
           return (_context.Professor?.Any(e => e.ProfId == id)).GetValueOrDefault();
         }
