@@ -13,6 +13,7 @@ namespace MyRateApp2.Models
         public string? Department { get; set; }
         public int? UniId { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:N1}", ApplyFormatInEditMode = true)]
         public double Overall { get; set; }
         public virtual University? Uni { get; set; }
         public ICollection<ProfessorRating> ProfessorRatings { get; set; } = new HashSet<ProfessorRating>();

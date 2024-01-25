@@ -16,6 +16,7 @@ html {
 body {
   margin-bottom: 60px;
 }
+<<<<<<< HEAD
 .rating-card {
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -44,3 +45,11 @@ body {
     font-size: 0.9em;
     color: #666;
 }
+=======
+/*.form-group {
+    width:50%;
+    float:left;
+    padding:20px;
+    border:2px;
+}*/
+>>>>>>> 0173181d6fd37cae919f8d795673990d9b2a9b70

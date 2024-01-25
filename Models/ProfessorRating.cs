@@ -39,6 +39,8 @@ namespace MyRateApp2.Models
             // Calculate the average
             double averageRating = ratings.Average();
 
+            averageRating = Math.Round(averageRating, 1);
+
             // Update the Overall property
             AverageQuality = averageRating;
 

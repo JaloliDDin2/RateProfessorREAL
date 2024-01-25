@@ -92,11 +92,9 @@ namespace MyRateApp2.Controllers
             {
                 universityRating.CalculateOverallRating(); // Calculate the overall rating
 
+                UpdateOverallQuality(universityRating.UniId);
                 _context.Add(universityRating);
                 await _context.SaveChangesAsync();
-
-                UpdateOverallQuality(universityRating.UniId);
-
 
                 //    double averageRating = _context.UniversityRating
                 //.Where(r => r.UserId == userId && r.UniId == universityRating.UniId)
@@ -121,8 +119,7 @@ namespace MyRateApp2.Controllers
                 double averageOverallQuality = university.UniversityRatings.Average(r => r.Overall);
 
                 // Update overall quality property
-                university.OverallQuality = averageOverallQuality;
-
+                university.OverallQuality = Math.Round(averageOverallQuality, 1);
                 // Save changes to the database
                 _context.SaveChanges();
             }
@@ -165,7 +162,7 @@ namespace MyRateApp2.Controllers
                     _context.Update(universityRating);
                     await _context.SaveChangesAsync();
 
-
+                    UpdateOverallQuality(universityRating.UniId);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

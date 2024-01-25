@@ -89,11 +89,11 @@ namespace MyRateApp2.Controllers
             if (ModelState.IsValid)
             {
                 professorRating.CalculateQuality();
+                UpdateOverallQuality(professorRating.ProfId);
+
 
                 _context.Add(professorRating);
                 await _context.SaveChangesAsync();
-
-                UpdateOverallQuality(professorRating.ProfId);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -153,8 +153,12 @@ namespace MyRateApp2.Controllers
             {
                 try
                 {
+                    professorRating.CalculateQuality();
+
                     _context.Update(professorRating);
                     await _context.SaveChangesAsync();
+
+                    UpdateOverallQuality(professorRating.ProfId);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

@@ -2,7 +2,7 @@
 {
     public enum ProfGrade
     {
-        Awful,
+        Awful = 1,
         Ok,
         Good,
         Great,
