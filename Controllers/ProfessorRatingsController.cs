@@ -50,7 +50,7 @@ namespace MyRateApp2.Controllers
         // GET: ProfessorRatings/Create
         public IActionResult Create()
         {
-            ViewData["ProfId"] = new SelectList(_context.Professor, "ProfId", "ProfId");
+            ViewData["ProfId"] = new SelectList(_context.Professor, "ProfId", "Fname");
             return View();
         }
 

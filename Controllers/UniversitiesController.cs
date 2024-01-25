@@ -78,6 +78,7 @@ namespace MyRateApp2.Controllers
 
 
         // GET: Universities/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();

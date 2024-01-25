@@ -7,7 +7,7 @@
 <h1>ProffessorRating</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Rate</a>
 </p>
 <table class="table">
     <thead>
@@ -86,11 +86,11 @@
                     @Html.DisplayFor(modelItem => item.Prof.Fname)
                     @Html.DisplayFor(modelItem => item.Prof.Lname)
                 </td>
-                <td>
+                @* <td>
                     <a asp-action="Edit" asp-route-id="@item.ProfRateId">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.ProfRateId">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.ProfRateId">Delete</a>
-                </td>
+                </td> *@
             </tr>
         }
     </tbody>

@@ -71,11 +71,12 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
+<h1>Universities</h1>
+@if (User.IsInRole("Admin"))
+{
+    <p>
     <a asp-action="Create">Create New</a>
-</p>
+</p>}
 
 <div class="container">
     @foreach (var item in Model)
@@ -86,9 +87,13 @@
                     <h5 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h5>
                 <p class="card-text"><span class="badge badge-warning">Quality @Html.DisplayFor(modelItem => item.OverallQuality)</span></p>
                     <p class="card-text"><small class="text-muted">@Html.DisplayFor(modelItem => item.Country), @Html.DisplayFor(modelItem => item.City)</small></p>
-                    <a asp-action="Edit" asp-route-id="@item.UniId" class="btn btn-primary">Edit</a>
                     <a asp-action="Details" asp-route-id="@item.UniId" class="btn btn-info">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.UniId" class="btn btn-danger">Delete</a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.UniId" class="btn btn-primary">Update</a>
+                        <a asp-action="Details" asp-route-id="@item.UniId" class="btn btn-info">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.UniId" class="btn btn-danger">Delete</a>
+                    }
                 </div>
             </div>
         </a>
