@@ -38,10 +38,12 @@ namespace MyRateApp2.Models
             // Calculate the average
             double averageRating = ratings.Average();
 
-            // Update the Overall property
-            Overall = averageRating;
+            double roundedAverageRating = Math.Round(averageRating, 1);
 
-            return averageRating;
+            // Update the Overall property
+            Overall = roundedAverageRating;
+
+            return roundedAverageRating;
         }
     }
 
