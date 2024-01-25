@@ -18,6 +18,8 @@ namespace MyRateApp2.Models
         public string? City { get; set; }
         public string? Website { get; set; }
         public string? Email { get; set; }
+        
+        [DisplayFormat(DataFormatString = "{0:N1}", ApplyFormatInEditMode = true)]
         public double? OverallQuality { get; set; }
         public ICollection<UniversityRating> UniversityRatings { get; set; } = new HashSet<UniversityRating>();
         public virtual ICollection<Professor> Professors { get; set; }

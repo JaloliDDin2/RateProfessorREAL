@@ -94,8 +94,7 @@ namespace MyRateApp2.Controllers
                 double averageOverallQuality = university.UniversityRatings.Average(r => r.Overall);
 
                 // Update overall quality property
-                university.OverallQuality = averageOverallQuality;
-
+                university.OverallQuality = Math.Round(averageOverallQuality, 1);
                 // Save changes to the database
                 _context.SaveChanges();
             }
