@@ -50,7 +50,7 @@ namespace MyRateApp2.Controllers
         // GET: ProfessorRatings/Create
         public IActionResult Create()
         {
-            ViewData["ProfId"] = new SelectList(_context.Professor, "ProfId", "Fname");
+            ViewData["ProfId"] = new SelectList(_context.Professor, "ProfId", "ProfId");
             return View();
         }
 
@@ -84,7 +84,7 @@ namespace MyRateApp2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProfRateId,ProfGrade,Comment,Attendance,WouldTakeAgain,LevelOfDifficulty,CourseCode,Textbook,CreationDate,Grade,ForCredit,ProfId")] ProfessorRating professorRating)
+        public async Task<IActionResult> Create([Bind("ProfRateId,ProfGrade,Comment,Attendance,WouldTakeAgain,LevelOfDifficulty,AverageQuality,CourseCode,Textbook,CreationDate,Grade,ForCredit,ProfId")] ProfessorRating professorRating)
         {
             if (ModelState.IsValid)
             {
@@ -107,11 +107,14 @@ namespace MyRateApp2.Controllers
                 .Include(u => u.ProfessorRatings) // Include ratings for eager loading
                 .FirstOrDefault(u => u.ProfId == professorId);
 
+
             if (professor != null)
             {
                 // Calculate average overall quality
-                double averageOverallQuality = professor.ProfessorRatings.Average(r => r.AverageQuality);
-
+                double averageOverallQuality = professor.ProfessorRatings
+                        .Select(r => r.AverageQuality)
+                        .DefaultIfEmpty() // default value if the collection is empty
+                        .Average();
                 // Update overall quality property
                 professor.Overall = averageOverallQuality;
 
@@ -142,7 +145,7 @@ namespace MyRateApp2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProfRateId,ProfGrade,Comment,Attendance,WouldTakeAgain,LevelOfDifficulty,CourseCode,Textbook,CreationDate,Grade,ForCredit,ProfId")] ProfessorRating professorRating)
+        public async Task<IActionResult> Edit(int id, [Bind("ProfRateId,ProfGrade,Comment,Attendance,WouldTakeAgain,LevelOfDifficulty,AverageQuality,CourseCode,Textbook,CreationDate,Grade,ForCredit,ProfId")] ProfessorRating professorRating)
         {
             if (id != professorRating.ProfRateId)
             {

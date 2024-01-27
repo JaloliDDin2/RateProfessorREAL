@@ -99,7 +99,7 @@ namespace MyRateApp2.Controllers
                 //    double averageRating = _context.UniversityRating
                 //.Where(r => r.UserId == userId && r.UniId == universityRating.UniId)
                 //.Average(r => r.Overall);
-
+                    
                 return RedirectToAction(nameof(Index));
             }
             ViewData["UniId"] = new SelectList(_context.University, "UniId", "UniId", universityRating.UniId);
@@ -116,7 +116,10 @@ namespace MyRateApp2.Controllers
             if (university != null)
             {
                 // Calculate average overall quality
-                double averageOverallQuality = university.UniversityRatings.Average(r => r.Overall);
+                double averageOverallQuality = university.UniversityRatings
+                        .Select(r => r.Overall)
+                        .DefaultIfEmpty(1) // default value if the collection is empty
+                        .Average();
 
                 // Update overall quality property
                 university.OverallQuality = Math.Round(averageOverallQuality, 1);
