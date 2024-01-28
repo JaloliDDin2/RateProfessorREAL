@@ -3,8 +3,10 @@
 @{
     ViewData["Title"] = "ShowRating";
 }
-
-<h1>Ratings</h1>
+@foreach(var item in Model){
+    <h1>@Html.DisplayFor(modelItem => item.Uni.Name)</h1>
+    break;
+}
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -212,79 +214,421 @@
             height: 100%;
             position: absolute;
         }
+
+    body {
+        background: #dcdcdc;
+    }
+
+    .total-like-user-main a {
+        display: inline-block;
+        margin: 0 -17px 0 0;
+    }
+
+    .total-like {
+        border: 1px solid;
+        border-radius: 50px;
+        display: inline-block;
+        font-weight: 500;
+        height: 34px;
+        line-height: 33px;
+        padding: 0 13px;
+        vertical-align: top;
+    }
+
+    .restaurant-detailed-ratings-and-reviews hr {
+        margin: 0 -24px;
+    }
+
+    .graph-star-rating-header .star-rating {
+        font-size: 17px;
+    }
+
+    .progress {
+        background: #f2f4f8 none repeat scroll 0 0;
+        border-radius: 0;
+        height: 30px;
+    }
+
+    .rating-list {
+        display: inline-flex;
+        margin-bottom: 15px;
+        width: 100%;
+    }
+
+    .rating-list-left {
+        height: 16px;
+        line-height: 29px;
+        width: 10%;
+    }
+
+    .rating-list-center {
+        width: 80%;
+    }
+
+    .rating-list-right {
+        line-height: 29px;
+        text-align: right;
+        width: 10%;
+    }
+
+    .restaurant-slider-pics {
+        bottom: 0;
+        font-size: 12px;
+        left: 0;
+        z-index: 999;
+        padding: 0 10px;
+    }
+
+    .restaurant-slider-view-all {
+        bottom: 15px;
+        right: 15px;
+        z-index: 999;
+    }
+
+    .offer-dedicated-nav .nav-link.active,
+    .offer-dedicated-nav .nav-link:hover,
+    .offer-dedicated-nav .nav-link:focus {
+        border-color: #3868fb;
+        color: #3868fb;
+    }
+
+    .offer-dedicated-nav .nav-link {
+        border-bottom: 2px solid #fff;
+        color: #000000;
+        padding: 16px 0;
+        font-weight: 600;
+    }
+
+    .offer-dedicated-nav .nav-item {
+        margin: 0 37px 0 0;
+    }
+
+    .restaurant-detailed-action-btn {
+        margin-top: 12px;
+    }
+
+    .restaurant-detailed-header-right .btn-success {
+        border-radius: 3px;
+        height: 45px;
+        margin: -18px 0 18px;
+        min-width: 130px;
+        padding: 7px;
+    }
+
+    .text-black {
+        color: #000000;
+    }
+
+    .icon-overlap {
+        bottom: -23px;
+        font-size: 74px;
+        opacity: 0.23;
+        position: absolute;
+        right: -32px;
+    }
+
+    .menu-list img {
+        width: 41px;
+        height: 41px;
+        object-fit: cover;
+    }
+
+    .restaurant-detailed-header-left img {
+        width: 88px;
+        height: 88px;
+        border-radius: 3px;
+        object-fit: cover;
+        box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+    }
+
+    .reviews-members .media .mr-3 {
+        width: 56px;
+        height: 56px;
+        object-fit: cover;
+    }
+
+    .rounded-pill {
+        border-radius: 50rem !important;
+    }
+
+    .total-like-user {
+        border: 2px solid #fff;
+        height: 34px;
+        box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+        width: 34px;
+    }
+
+    .total-like-user-main a {
+        display: inline-block;
+        margin: 0 -17px 0 0;
+    }
+
+    .total-like {
+        border: 1px solid;
+        border-radius: 50px;
+        display: inline-block;
+        font-weight: 500;
+        height: 34px;
+        line-height: 33px;
+        padding: 0 13px;
+        vertical-align: top;
+    }
+
+    .restaurant-detailed-ratings-and-reviews hr {
+        margin: 0 -24px;
+    }
+
+    .graph-star-rating-header .star-rating {
+        font-size: 17px;
+    }
+
+    .progress {
+        background: #f2f4f8 none repeat scroll 0 0;
+        border-radius: 0;
+        height: 30px;
+    }
+
+    .rating-list {
+        display: inline-flex;
+        margin-bottom: 15px;
+        width: 100%;
+    }
+
+    .rating-list-left {
+        height: 16px;
+        line-height: 29px;
+        width: 10%;
+    }
+
+    .rating-list-center {
+        width: 80%;
+    }
+
+    .rating-list-right {
+        line-height: 29px;
+        text-align: right;
+        width: 10%;
+    }
+
+    .restaurant-slider-pics {
+        bottom: 0;
+        font-size: 12px;
+        left: 0;
+        z-index: 999;
+        padding: 0 10px;
+    }
+
+    .restaurant-slider-view-all {
+        bottom: 15px;
+        right: 15px;
+        z-index: 999;
+    }
+
+    .progress {
+        background: #f2f4f8 none repeat scroll 0 0;
+        border-radius: 0;
+        height: 30px;
+
+    }
 </style> 
-@{
+
+
+@if (Model != null && Model.Any())
+{
     var reputationAverage = Model.Select(x => x.Reputation).Average();
+    reputationAverage = (reputationAverage / 5) * 100;
     var happinessAverage = Model.Select(x => x.Happiness).Average();
+    happinessAverage = (happinessAverage / 5) * 100;
     var opportunityAverage = Model.Select(x => x.Opportunity).Average();
+    opportunityAverage = (opportunityAverage / 5) * 100;
     var internetAverage = Model.Select(x => x.Internet).Average();
+    internetAverage = (internetAverage / 5) * 100;
     var facilitiesAverage = Model.Select(x => x.Facilities).Average();
+    facilitiesAverage = (facilitiesAverage / 5) * 100;
     var clubsAverage = Model.Select(x => x.Clubs).Average();
+    clubsAverage = (clubsAverage / 5) * 100;
     var safetyAverage = Model.Select(x => x.Safety).Average();
+    safetyAverage = (safetyAverage / 5) * 100;
     var locationAverage = Model.Select(x => x.Location).Average();
+    locationAverage = (locationAverage / 5) * 100;
     var socialAverage = Model.Select(x => x.Social).Average();
+    socialAverage = (socialAverage / 5) * 100;
     var foodAverage = Model.Select(x => x.Food).Average();
+    foodAverage = (foodAverage / 5) * 100;
     // ... other categories
+
+    <div class="bg-white rounded shadow-sm p-4 mb-4 clearfix graph-star-rating" style=" width:75%; margin:auto;">
+        <h5 class="mb-0 mb-4">Overall Rating</h5>
+        <div class="graph-star-rating-header">
+            <div class="star-rating">
+                <a href="#"><i class="icofont-ui-rating active"></i></a>
+                <a href="#"><i class="icofont-ui-rating active"></i></a>
+                <a href="#"><i class="icofont-ui-rating active"></i></a>
+                <a href="#"><i class="icofont-ui-rating active"></i></a>
+                <a href="#"><i class="icofont-ui-rating"></i></a> <b class="text-black ml-2"></b>
+            </div>
+            <p class="text-black mb-4 mt-2"></p>
+        </div>
+        <div class="graph-star-rating-body">
+            <div class="rating-list">
+                <div class="rating-list-left text-black">
+                    Reputation
+                </div>
+                <div class="rating-list-center">
+                    <div class="progress">
+                        <div style="width: @reputationAverage%" aria-valuemax="5" aria-valuemin="0" aria-valuenow="5" role="progressbar" class="progress-bar bg-primary">
+                            <span class="sr-only"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rating-list-right text-black">@reputationAverage.ToString("0")%</div>
+            </div>
+        </div>
+        <div class="graph-star-rating-body">
+            <div class="rating-list">
+                <div class="rating-list-left text-black">
+                    Happiness
+                </div>
+                <div class="rating-list-center">
+                    <div class="progress">
+                        <div style="width: @happinessAverage%" aria-valuemax="5" aria-valuemin="0" aria-valuenow="5" role="progressbar" class="progress-bar bg-primary">
+                            <span class="sr-only"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rating-list-right text-black">@happinessAverage.ToString("0")%</div>
+            </div>
+        </div>
+        <div class="graph-star-rating-body">
+            <div class="rating-list">
+                <div class="rating-list-left text-black">
+                    Opportunity
+                </div>
+                <div class="rating-list-center">
+                    <div class="progress">
+                        <div style="width: @opportunityAverage%" aria-valuemax="5" aria-valuemin="0" aria-valuenow="5" role="progressbar" class="progress-bar bg-primary">
+                            <span class="sr-only"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rating-list-right text-black">@opportunityAverage.ToString("0")%</div>
+            </div>
+        </div>
+        <div class="graph-star-rating-body">
+            <div class="rating-list">
+                <div class="rating-list-left text-black">
+                    Internet
+                </div>
+                <div class="rating-list-center">
+                    <div class="progress">
+                        <div style="width: @internetAverage%" aria-valuemax="5" aria-valuemin="0" aria-valuenow="5" role="progressbar" class="progress-bar bg-primary">
+                            <span class="sr-only"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rating-list-right text-black">@internetAverage.ToString("0")%</div>
+            </div>
+        </div>
+        <div class="graph-star-rating-body">
+            <div class="rating-list">
+                <div class="rating-list-left text-black">
+                    Facilities
+                </div>
+                <div class="rating-list-center">
+                    <div class="progress">
+                        <div style="width: @facilitiesAverage%" aria-valuemax="5" aria-valuemin="0" aria-valuenow="5" role="progressbar" class="progress-bar bg-primary">
+                            <span class="sr-only"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rating-list-right text-black">@facilitiesAverage.ToString("0")%</div>
+            </div>
+        </div>
+        <div class="graph-star-rating-body">
+            <div class="rating-list">
+                <div class="rating-list-left text-black">
+                    Clubs
+                </div>
+                <div class="rating-list-center">
+                    <div class="progress">
+                        <div style="width: @clubsAverage%" aria-valuemax="5" aria-valuemin="0" aria-valuenow="5" role="progressbar" class="progress-bar bg-primary">
+                            <span class="sr-only"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rating-list-right text-black">@clubsAverage.ToString("0")%</div>
+            </div>
+        </div>
+        <div class="graph-star-rating-body">
+            <div class="rating-list">
+                <div class="rating-list-left text-black">
+                    Safety
+                </div>
+                <div class="rating-list-center">
+                    <div class="progress">
+                        <div style="width: @safetyAverage%" aria-valuemax="5" aria-valuemin="0" aria-valuenow="5" role="progressbar" class="progress-bar bg-primary">
+                            <span class="sr-only"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rating-list-right text-black">@safetyAverage.ToString("0")%</div>
+            </div>
+        </div>
+        <div class="graph-star-rating-body">
+            <div class="rating-list">
+                <div class="rating-list-left text-black">
+                    Location
+                </div>
+                <div class="rating-list-center">
+                    <div class="progress">
+                        <div style="width: @locationAverage%" aria-valuemax="5" aria-valuemin="0" aria-valuenow="5" role="progressbar" class="progress-bar bg-primary">
+                            <span class="sr-only"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rating-list-right text-black">@locationAverage.ToString("0")%</div>
+            </div>
+        </div>
+        <div class="graph-star-rating-body">
+            <div class="rating-list">
+                <div class="rating-list-left text-black">
+                    Social
+                </div>
+                <div class="rating-list-center">
+                    <div class="progress">
+                        <div style="width: @socialAverage%" aria-valuemax="5" aria-valuemin="0" aria-valuenow="5" role="progressbar" class="progress-bar bg-primary">
+                            <span class="sr-only"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rating-list-right text-black">@socialAverage.ToString("0")%</div>
+            </div>
+        </div>
+        <div class="graph-star-rating-body">
+            <div class="rating-list">
+                <div class="rating-list-left text-black">
+                    Food
+                </div>
+                <div class="rating-list-center">
+                    <div class="progress">
+                        <div style="width: @foodAverage%" aria-valuemax="5" aria-valuemin="0" aria-valuenow="5" role="progressbar" class="progress-bar bg-primary">
+                            <span class="sr-only"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="rating-list-right text-black">@foodAverage.ToString("0")%</div>
+            </div>
+        </div>
+        <div class="graph-star-rating-footer text-center mt-3 mb-3">
+            <button type="button" class="btn btn-outline-primary btn-sm"> <a asp-action="Create">Rate</a></button>
+        </div>
+    </div>
 }
-
-<div class="rating-card">
-    @* <div class="overall-rating">
-        <span class="rating-value">@overallQualityAverage.ToString("0.0")</span>
-        <span class="rating-label">Overall Quality</span>
-    </div> *@
-
-    <div class="category-rating">
-        <i class="icon icon-reputation"></i>
-        <span class="category-name">Reputation</span>
-        <span class="rating-value">@reputationAverage.ToString("0.0")</span>
-    </div>
-    <div class="category-rating">
-    <i class="icon icon-reputation"></i>
-    <span class="category-name">Happiness</span>
-    <span class="rating-value">@happinessAverage.ToString("0.0")</span>
-</div>
-    <div class="category-rating">
-        <i class="icon icon-reputation"></i>
-        <span class="category-name">Opportunity</span>
-        <span class="rating-value">@opportunityAverage.ToString("0.0")</span>
-    </div>
-    <div class="category-rating">
-        <i class="icon icon-reputation"></i>
-        <span class="category-name">Internet</span>
-        <span class="rating-value">@internetAverage.ToString("0.0")</span>
-    </div>
-    <div class="category-rating">
-        <i class="icon icon-reputation"></i>
-        <span class="category-name">Facilities</span>
-        <span class="rating-value">@facilitiesAverage.ToString("0.0")</span>
-    </div>
-    <div class="category-rating">
-        <i class="icon icon-reputation"></i>
-        <span class="category-name">Clubs</span>
-        <span class="rating-value">@clubsAverage.ToString("0.0")</span>
-    </div>
-    <div class="category-rating">
-        <i class="icon icon-reputation"></i>
-        <span class="category-name">Social</span>
-        <span class="rating-value">@socialAverage.ToString("0.0")</span>
-    </div>
-    <div class="category-rating">
-        <i class="icon icon-reputation"></i>
-        <span class="category-name">Safety</span>
-        <span class="rating-value">@safetyAverage.ToString("0.0")</span>
-    </div>
-    <div class="category-rating">
-        <i class="icon icon-reputation"></i>
-        <span class="category-name">Location</span>
-        <span class="rating-value">@locationAverage.ToString("0.0")</span>
-    </div>
-    <div class="category-rating">
-        <i class="icon icon-reputation"></i>
-        <span class="category-name">Food</span>
-        <span class="rating-value">@foodAverage.ToString("0.0")</span>
-    </div>
-    <!-- Repeat for other categories -->
-</div>
+else
+{
+    // Model is empty, display a message or handle accordingly.
+    <div>No data available.</div>
+}
 
 
 

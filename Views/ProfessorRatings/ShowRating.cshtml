@@ -9,7 +9,7 @@
 <p>
     <a asp-action="Create">Rate</a>
 </p>
-<table class="table">
+@* <table class="table">
     <thead>
         <tr>
             <th>
@@ -90,9 +90,133 @@
                     <a asp-action="Edit" asp-route-id="@item.ProfRateId">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.ProfRateId">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.ProfRateId">Delete</a>
-                </td> *@
+                </td>
             </tr>
         }
     </tbody>
-</table>
- 
+</table> *@
+
+<style>
+    .card {
+        font-family: Arial, sans-serif;
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .ratings {
+        display: flex;
+        margin-bottom: 20px;
+    }
+
+    .rating-box {
+        width: 100px;
+        height: 100px;
+        border-radius: 4px;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-right: 10px;
+    }
+
+        .rating-box .rating-title {
+            font-size: 0.8em;
+            margin-bottom: 5px;
+        }
+
+        .rating-box.quality {
+            background-color: #06BBCC;
+        }
+
+        .rating-box.difficulty {
+            background-color: #777;
+        }
+
+    .course-info {
+        flex-grow: 1;
+    }
+
+    .course-title {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .course-details span {
+        display: block;
+        font-size: 0.9em;
+        margin-bottom: 5px;
+    }
+
+    .comments {
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 4px;
+        margin: 20px 0;
+    }
+
+    .tag {
+        display: inline-block;
+        background-color: #e0e0e0;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.8em;
+        margin-right: 5px;
+    }
+
+    .date {
+        font-size: 0.9em;
+        text-align: right;
+        color: #666;
+    }
+</style>
+
+
+@if (Model != null && Model.Any())
+{
+    @foreach (var item in Model)
+    {
+        <div class="card">
+            <div class="ratings">
+                <div class="rating-box quality">
+                    <span class="rating-title">QUALITY</span>
+                    <span class="rating-value">@Html.DisplayFor(modelItem => item.ProfGrade)</span>
+                </div>
+                <div class="rating-box difficulty">
+                    <span class="rating-title">DIFFICULTY</span>
+                    <span class="rating-value">@Html.DisplayFor(modelItem => item.LevelOfDifficulty)</span>
+                </div>
+            </div>
+            <div class="course-info">
+                <div class="course-title">@Html.DisplayFor(modelItem => item.CourseCode)</div>
+                <div class="course-details">
+                    <span>For Credit: @Html.DisplayFor(modelItem => item.ForCredit)</span>
+                    <span>Would Take Again: @Html.DisplayFor(modelItem => item.WouldTakeAgain)</span>
+                    <span>Grade: @Html.DisplayFor(modelItem => item.Grade)</span>
+                    <span>Textbook: @Html.DisplayFor(modelItem => item.Textbook)</span>
+                </div>
+                <div class="comments">
+                    <p>@Html.DisplayFor(modelItem => item.Comment)</p>
+                </div>
+            </div>
+            <div class="date">
+                @Html.DisplayFor(modelItem => item.CreationDate)
+            </div>
+        </div>
+    }
+
+}
+else
+{
+    // Model is empty, display a message or handle accordingly.
+    <div>No data available.</div>
+}
+
